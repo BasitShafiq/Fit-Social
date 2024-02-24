@@ -14,6 +14,7 @@ import '../../../config/images sources.dart';
 import '../../../helpers/string_methods.dart';
 import '../../widgets/general_widgets/screen_background_image.dart';
 import '../../widgets/reviews_widgets.dart';
+import '../live workouts/group_calling.dart';
 import 'componenets/HomePageSearchBar.dart';
 import 'componenets/ItemsSwitchTiles.dart';
 import 'componenets/find_your_workout.dart';
@@ -118,6 +119,15 @@ class _HomePageState extends State<HomePage> {
                                 Get.to((FeedPage()));
                               },
                               child: Text('Feeds'),
+                            ),
+                          ),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Navigate to the tweet composition page
+                                Get.to((GroupCallScreen()));
+                              },
+                              child: Text('GROUP CALL'),
                             ),
                           ),
                           Center(

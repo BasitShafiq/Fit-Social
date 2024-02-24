@@ -45,9 +45,11 @@ dependencies:
   image_picker: ^1.0.7
   firebase_storage: ^11.6.6
   google_fonts: ^6.1.0
-  intl: ^0.19.0
+  intl: ^0.18.1
   flutter_rating_bar: ^4.0.0
-
+  zego_uikit_prebuilt_call: ^3.1.0
+  zego_uikit_signaling_plugin: ^2.0.3
+  zego_uikit_prebuilt_live_streaming: ^2.3.6
 dev_dependencies:
   flutter_test:
     sdk: flutter
