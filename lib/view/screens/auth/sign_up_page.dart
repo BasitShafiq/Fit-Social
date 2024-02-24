@@ -21,6 +21,7 @@ class SignUpPage extends GetView<SignUpController> with DelayHelperMixin {
 
   @override
   Widget build(BuildContext context) {
+    final String? type = Get.arguments;
     return Scaffold(
       body: Stack(
         children: [
@@ -100,14 +101,15 @@ class SignUpPage extends GetView<SignUpController> with DelayHelperMixin {
                             child: CustomButton(
                               onPressed: () {
                                 controller.createNewAccount(
-                                  email: controller.signUpEmailController.text
-                                      .trim(),
-                                  password: controller
-                                      .signUpPasswordController.text
-                                      .trim(),
-                                  username: controller.signUpUserController.text
-                                      .trim(),
-                                );
+                                    email: controller.signUpEmailController.text
+                                        .trim(),
+                                    password: controller
+                                        .signUpPasswordController.text
+                                        .trim(),
+                                    username: controller
+                                        .signUpUserController.text
+                                        .trim(),
+                                    type: type.toString() ?? "");
                               },
                               isRounded: false,
                               text: capitalize(AppTexts.signUp),

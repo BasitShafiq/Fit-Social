@@ -15,6 +15,7 @@ extension CreateNewAccExtension on SignUpController {
     required String email,
     required String password,
     required String username,
+    required String type,
   }) async {
     if (email.isValidEmail &&
         password.isValidPassword &&
@@ -22,25 +23,21 @@ extension CreateNewAccExtension on SignUpController {
       try {
         dialogsAndLoadingController.showLoading();
 
-        // Firebase create account method, store the credential
         final UserCredential credential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
 
-        // Here we created acc with firebase auth, the email and password only,  to collect and use more data, we need to store it
         addUserInformationToFirestore(
-          credential: credential,
-          email: email,
-          username: username,
-          isEmailVerified: FirebaseAuth.instance.currentUser!.emailVerified,
-          uid: credential.user!.uid,
-          profileImgPath: "",
-          // password: password,
-        );
-
-        // On sign up, we should verify our user email (no need to unnecessary checks)
+            credential: credential,
+            email: email,
+            username: username,
+            isEmailVerified: FirebaseAuth.instance.currentUser!.emailVerified,
+            uid: credential.user!.uid,
+            profileImgPath: "",
+            type: type);
+        print("CREATED");
         Get.to(() => EmailVerificatioPage());
       } on FirebaseAuthException catch (e) {
         Get.back();
@@ -54,7 +51,6 @@ extension CreateNewAccExtension on SignUpController {
       }
     }
 
-    // Now, if something isn't valid, inform user about it
     if (username.isEmpty || email.isEmpty || password.isEmpty) {
       dialogsAndLoadingController.showError(
         capitalize(

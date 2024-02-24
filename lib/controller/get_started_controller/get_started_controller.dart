@@ -20,4 +20,12 @@ class GetStartedController extends GetxController {
 
     update([rebuildId]);
   }
+
+  int? getSelectedCardId() {
+    final selectedCard = checkedCardsIds.firstWhere(
+      (card) => card.isChecked,
+    );
+
+    return selectedCard?.id;
+  }
 }

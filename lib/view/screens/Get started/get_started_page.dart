@@ -122,7 +122,13 @@ class GetStartedPage extends GetView<GetStartedController>
                                       onPressed: controller
                                               .hasUserChooserAtLeastOneChoice
                                           ? () {
-                                              Get.toNamed("/signUp");
+                                              final selectedCardId = controller
+                                                  .getSelectedCardId()
+                                                  .toString();
+                                              if (selectedCardId != null) {
+                                                Get.toNamed("/signUp",
+                                                    arguments: selectedCardId);
+                                              }
                                             }
                                           : null,
                                       child: Text(
