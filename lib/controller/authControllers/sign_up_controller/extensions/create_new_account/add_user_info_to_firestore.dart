@@ -14,7 +14,7 @@ extension AddExtraInfoExt on SignUpController {
     required bool isEmailVerified,
     String? password,
   }) async {
-    await FirebaseFirestore.instance.collection("Users").doc(uid).set({
+    await FirebaseFirestore.instance.collection("aboutUsers").doc(uid).set({
       "email": email,
       "username": username,
       "type": type,
@@ -22,6 +22,6 @@ extension AddExtraInfoExt on SignUpController {
       "uid": credential.user!.uid,
       "verified": isEmailVerified,
       "createdAt": thisMomentTime,
-    }).then((value) => print("CREATED"));
+    });
   }
 }

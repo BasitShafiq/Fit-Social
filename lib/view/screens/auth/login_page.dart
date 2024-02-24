@@ -5,7 +5,6 @@ import 'package:fitsocial/config/show_delay_mixin.dart';
 import 'package:fitsocial/config/text.dart';
 import 'package:fitsocial/controller/authControllers/login_controller/extensions/login_with_account.dart';
 import 'package:fitsocial/view/widgets/general_widgets/screen_background_image.dart';
-
 import '../../../controller/authControllers/login_controller/login_controller.dart';
 import '../../../config/Colors.dart';
 import '../../../helpers/string_methods.dart';

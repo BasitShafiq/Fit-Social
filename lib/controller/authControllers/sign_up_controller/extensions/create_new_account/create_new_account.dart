@@ -37,7 +37,6 @@ extension CreateNewAccExtension on SignUpController {
             uid: credential.user!.uid,
             profileImgPath: "",
             type: type);
-        print("CREATED");
         Get.to(() => EmailVerificatioPage());
       } on FirebaseAuthException catch (e) {
         Get.back();

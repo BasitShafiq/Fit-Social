@@ -1,4 +1,6 @@
 import 'package:delayed_display/delayed_display.dart';
+import 'package:fitsocial/view/screens/feed/composeTweet.dart';
+import 'package:fitsocial/view/screens/feed/homeFeeds.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fitsocial/config/Colors.dart';
@@ -100,6 +102,24 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Navigate to the tweet composition page
+                                Get.to(ComposeMessagePage());
+                              },
+                              child: Text('Compose Tweet'),
+                            ),
+                          ),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Navigate to the tweet composition page
+                                Get.to((FeedPage()));
+                              },
+                              child: Text('Feeds'),
+                            ),
+                          ),
                           const FindYourWorkout(),
                           GestureDetector(
                             onTap: (() {
