@@ -7,13 +7,13 @@ import 'package:fitsocial/config/Colors.dart';
 import 'package:fitsocial/config/text.dart';
 import 'package:fitsocial/config/workouts%20lists/workouts%20Lists.dart';
 import 'package:fitsocial/view/screens/user%20profile/userProfil.dart';
-
 import '../../../controller/functionsController.dart';
 import '../../../controller/tabs controllers/workOutTabController.dart';
 import '../../../controller/userController/userController.dart';
 import '../../../config/images sources.dart';
 import '../../../helpers/string_methods.dart';
 import '../../widgets/general_widgets/screen_background_image.dart';
+import '../../widgets/reviews_widgets.dart';
 import 'componenets/HomePageSearchBar.dart';
 import 'componenets/ItemsSwitchTiles.dart';
 import 'componenets/find_your_workout.dart';
@@ -118,6 +118,15 @@ class _HomePageState extends State<HomePage> {
                                 Get.to((FeedPage()));
                               },
                               child: Text('Feeds'),
+                            ),
+                          ),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Navigate to the tweet composition page
+                                showModal(context);
+                              },
+                              child: Text('Ratings'),
                             ),
                           ),
                           const FindYourWorkout(),
