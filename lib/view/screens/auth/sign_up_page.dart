@@ -1,4 +1,5 @@
 import 'package:delayed_display/delayed_display.dart';
+import 'package:fitsocial/controller/authControllers/login_controller/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fitsocial/controller/authControllers/sign_up_controller/extensions/create_new_account/create_new_account.dart';
@@ -16,6 +17,7 @@ import '../../widgets/general_widgets/titleWithDescription.dart';
 
 class SignUpPage extends GetView<SignUpController> with DelayHelperMixin {
   SignUpPage({super.key});
+  final LoginController loginController = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {

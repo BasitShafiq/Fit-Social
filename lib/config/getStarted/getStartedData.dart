@@ -5,16 +5,12 @@ import '../../model/get_started_page_card_choices_model.dart';
 
 String cardsJson = '''[
     {
-      "title": "inactive",
-      "description": "I have never trained"
+      "title": "Fitness Enthusiast",
+      "description": ""
     },
     {
-      "title": "beginner",
-      "description": "I have trained few times"
-    },
-    {
-      "title": "weak",
-      "description": "I feel like i can train better"
+      "title": "Fitness Professional",
+      "description": ""
     }
   ]''';
 

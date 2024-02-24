@@ -5,18 +5,10 @@ import 'package:fitsocial/controller/authControllers/login_controller/extensions
 import '../../functionsController/dialogsAndLoadingController.dart';
 
 class LoginController extends GetxController {
-  // Inputs controllers
   late TextEditingController loginEmailController;
   late TextEditingController loginPasswordController;
 
-  // Depen. injection
   DialogsAndLoadingController dialogsAndLoadingController = Get.find();
-
-// TODO: implement show/hide for the password field
-//   // showPassword(bool obscureText) {
-//   //   obscureText = false;
-//   //   update();
-//   // }
 
   @override
   void onInit() {

@@ -90,24 +90,6 @@ class WelcomePage extends GetView<FunctionsController> with DelayHelperMixin {
                         height: 30,
                       ),
                       // Change Language txt
-                      Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            Get.to(ChooseLaungagePage());
-                          },
-                          child: DelayedDisplay(
-                            delay: getDelayDuration(),
-                            child: Text(
-                              AppTexts.changeLaungage,
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                fontSize: 14,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   )
                 ],

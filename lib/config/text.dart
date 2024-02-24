@@ -1,9 +1,8 @@
-
 // to-do: correct spells, search for more texts in app if I forget to add them here
 class AppTexts {
   static String error = "Error";
-  static String firstMainWord = "hard";
-  static String secondaryMainWord = "element";
+  static String firstMainWord = "Fit";
+  static String secondaryMainWord = "Social";
   static String welcome = "welcome";
   static String welcomeDescription =
       "This is a workout app that will help you to get fit and stay fit.";
@@ -14,14 +13,12 @@ class AppTexts {
   static String primaryLaungage = "en";
   static String secondaryLaungage = "fr";
   static String aboutYou = "about you";
-  static String getStartedDescription =
-      "we want to know more about you, follow the next steps to complete the information";
+  static String getStartedDescription = "Please tell us more about yourself";
   static String skipIntro = "Skip intro";
   static String next = "Next";
   static String signIn = "sign in";
   static String signUp = "sign up";
-  static String loginDescription =
-      "Train and live the new experience of exercising at home";
+  static String loginDescription = "";
   static String email = "email";
   static String password = "password";
   static String forgetPassword = "forgot password ?";
@@ -34,8 +31,7 @@ class AppTexts {
       "We have sent you an email to verify your account. Please check your inbox and click the link to verify it";
   static String done = "done";
   static String reSendEmailVerification = "re-send email verification";
-  static String signUpDescription =
-      "Join more than 100,000 warriors and train for the next big challenge";
+  static String signUpDescription = "";
   static String username = "username";
   static String alreadyHaveAnAccount = "Already have an account ?";
   static String find = "find";
@@ -74,12 +70,13 @@ class AppTexts {
   static String wrongPassword = "wrong password";
   static String invalidEmail = "Invalid email address, try again";
   static String enterPassword = "Please enter your password";
-  static String passwordMustBe5AtLeast = "Password must be at least 5 characters long";
+  static String passwordMustBe5AtLeast =
+      "Password must be at least 5 characters long";
   static String usernameMustBe5AtLeast =
       "username must be at least 5 characters long";
   static String weakPassword = "weak password, try with stronger one";
   static String emailAlreadyInUse = "this email is already in use";
-  static String fillFields =  "please, fill all fields";
+  static String fillFields = "please, fill all fields";
   // static String basedOnReviews = "based on users reviews";
   // static String basedOnReviews = "based on users reviews";
   // static String basedOnReviews = "based on users reviews";
@@ -95,5 +92,4 @@ class AppTexts {
   // static String basedOnReviews = "based on users reviews";
   // static String basedOnReviews = "based on users reviews";
   // static String basedOnReviews = "based on users reviews";
-
 }
