@@ -1,11 +1,16 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitsocial/controller/functionsController/dialogsAndLoadingController.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ComposeMessagePage extends StatefulWidget {
+  const ComposeMessagePage({super.key});
+
   @override
   _ComposeMessagePageState createState() => _ComposeMessagePageState();
 }
@@ -34,12 +39,15 @@ class _ComposeMessagePageState extends State<ComposeMessagePage> {
   }
 
   void _submitButton() async {
+    DialogsAndLoadingController dialogsAndLoadingController =
+        Get.put(DialogsAndLoadingController());
+    dialogsAndLoadingController.showLoading();
     User? user = FirebaseAuth.instance.currentUser;
 
     String userId = user!.uid;
     String message = _textEditingController.text;
 
-    String imageUrl = '';
+    String? imageUrl;
     if (_image.path.isNotEmpty) {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
       firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
@@ -58,6 +66,8 @@ class _ComposeMessagePageState extends State<ComposeMessagePage> {
       'imageUrl': imageUrl,
       'timestamp': Timestamp.now(),
     });
+    Get.back();
+    Get.back();
 
     _textEditingController.clear();
     setState(() {
@@ -70,11 +80,17 @@ class _ComposeMessagePageState extends State<ComposeMessagePage> {
     double halfScreenWidth = MediaQuery.of(context).size.width * 0.5;
 
     return Scaffold(
+      backgroundColor: const Color(0xff131429),
       appBar: AppBar(
-        title: Text('Compose Message'),
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: Colors.transparent,
+        title: const Text(
+          'Create Your Post',
+          style: TextStyle(color: Colors.white),
+        ),
         actions: [
           IconButton(
-            icon: Icon(Icons.send),
+            icon: const Icon(Icons.send),
             onPressed: _submitButton,
           ),
         ],
@@ -84,20 +100,29 @@ class _ComposeMessagePageState extends State<ComposeMessagePage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _textEditingController,
-                decoration: InputDecoration(
-                  hintText: 'Compose your message...',
-                  border: OutlineInputBorder(),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Container(
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                  child: TextField(
+                    controller: _textEditingController,
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                      hintText: 'Compose your message...',
+                      border: OutlineInputBorder(),
+                    ),
+                    maxLines: 7,
+                  ),
                 ),
-                maxLines: null,
               ),
             ),
             _image.path.isNotEmpty
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
-                      width: halfScreenWidth,
+                      width: 800,
+                      height: 320,
                       child: Image.file(_image),
                     ),
                   )
@@ -136,22 +161,41 @@ class ComposeBottomIconWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 50,
-      decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: Theme.of(context).primaryColor)),
-        color: Colors.white,
+      decoration: const BoxDecoration(
+        //border: Border(top: BorderSide(color: Theme.of(context).primaryColor)),
+        color: Colors.transparent,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          IconButton(
-            onPressed: () => _setImage(ImageSource.gallery),
-            color: Theme.of(context).primaryColor,
-            icon: Icon(Icons.photo_library),
+          const SizedBox(
+            width: 15,
           ),
-          IconButton(
-            onPressed: () => _setImage(ImageSource.camera),
-            color: Theme.of(context).primaryColor,
-            icon: Icon(Icons.camera_alt),
+          InkWell(
+            onTap: () => _setImage(ImageSource.gallery),
+            child: Container(
+              height: 70,
+              width: 70,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(13), color: Colors.white),
+              child: const Center(
+                child: Icon(Icons.image),
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 15,
+          ),
+          InkWell(
+            onTap: () => _setImage(ImageSource.camera),
+            child: Container(
+              height: 70,
+              width: 70,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(13), color: Colors.white),
+              child: const Center(
+                child: Icon(Icons.camera_alt),
+              ),
+            ),
           ),
         ],
       ),
