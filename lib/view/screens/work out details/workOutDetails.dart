@@ -296,7 +296,7 @@ class WorkOutDetails extends StatelessWidget {
       try {
         CollectionReference workoutsCollection =
             FirebaseFirestore.instance.collection('workouts');
-        await workoutsCollection.add(workoutData);
+        await workoutsCollection.add(workoutData).then((value) => Get.back());
       } catch (e) {
         print('Error adding workout to schedule: $e');
       }
