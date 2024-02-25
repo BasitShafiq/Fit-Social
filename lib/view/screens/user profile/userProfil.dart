@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitsocial/charts_screen.dart';
+import 'package:fitsocial/steps_count.dart';
 import 'package:fitsocial/view/screens/user%20profile/certificate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -272,6 +274,32 @@ class _UserProfileState extends State<UserProfile> {
             ),
             const Spacer(
               flex: 2,
+            ),
+            DelayedDisplay(
+              delay: Duration(microseconds: 100),
+              child: CustomButton(
+                onPressed: () {
+                  Get.to(FitnessProgressChart());
+                },
+                text: capitalize("Analytics"),
+                isOutlined: false,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            DelayedDisplay(
+              delay: Duration(microseconds: 100),
+              child: CustomButton(
+                onPressed: () {
+                  Get.to(CountSteps());
+                },
+                text: capitalize("Activity Tracking"),
+                isOutlined: false,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             if (data['type'] == "1")
               DelayedDisplay(

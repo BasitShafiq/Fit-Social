@@ -1,21 +1,51 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'config/Colors.dart';
 
-class FitnessProgressChart extends StatelessWidget {
-  final List<ChartData> chartData = [
-    ChartData(1, 200),
-    ChartData(2, 250),
-    ChartData(3, 300),
-    ChartData(4, 280),
-    ChartData(5, 320),
-    ChartData(6, 350),
-    ChartData(7, 330),
-  ];
+class FitnessProgressChart extends StatefulWidget {
+  @override
+  _FitnessProgressChartState createState() => _FitnessProgressChartState();
+}
 
-  // Dummy counts for live sessions and total followers
+class _FitnessProgressChartState extends State<FitnessProgressChart> {
+  late List<ChartData> chartData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchChartData();
+  }
+
+  Future<List<ChartData>> fetchChartData() async {
+    List<ChartData> chartData = [];
+    String? userId = await FirebaseAuth.instance.currentUser?.uid;
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('nutritionTracking')
+        .where('userId', isEqualTo: userId)
+        .get();
+
+    querySnapshot.docs
+        .forEach((DocumentSnapshot<Map<String, dynamic>> document) {
+      String dateString = document['date'];
+      List<String> dateParts = dateString.split('-');
+      int day = int.parse(dateParts[2]);
+
+      double calories = document['calories'].toDouble();
+
+      ChartData dataPoint = ChartData(day, calories);
+      chartData.add(dataPoint);
+    });
+    setState(() {
+      this.chartData = chartData;
+    });
+    return chartData;
+  }
+
   final int liveSessionsCount = 10;
   final int totalFollowersCount = 1000;
 
@@ -118,7 +148,7 @@ class FitnessProgressChart extends StatelessWidget {
 
 class ChartData {
   final int day;
-  final int calories;
+  final double calories;
 
   ChartData(this.day, this.calories);
 }

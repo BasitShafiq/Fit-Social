@@ -7,6 +7,7 @@ import 'package:fitsocial/view/screens/feed/groups.dart';
 import 'package:fitsocial/view/screens/feed/homeFeeds.dart';
 import 'package:fitsocial/view/screens/feed/search.dart';
 import 'package:fitsocial/view/screens/live%20workouts/group_calling.dart';
+import 'package:fitsocial/view/widgets/general_widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fitsocial/config/Colors.dart';
@@ -21,6 +22,7 @@ import '../../../config/images sources.dart';
 import '../../../helpers/string_methods.dart';
 import '../../widgets/general_widgets/screen_background_image.dart';
 import '../../widgets/reviews_widgets.dart';
+import '../nutrition log/nutrition_log.dart';
 import 'componenets/HomePageSearchBar.dart';
 import 'componenets/ItemsSwitchTiles.dart';
 import 'componenets/find_your_workout.dart';
@@ -105,10 +107,6 @@ class _NavScreenState extends State<NavScreen> {
                     const SizedBox(
                       height: 55,
                     ),
-                    DelayedDisplay(
-                      delay: Duration(milliseconds: delay + 100),
-                      child: PlayButton(),
-                    ),
                     const SizedBox(
                       height: 55,
                     ),
@@ -117,72 +115,8 @@ class _NavScreenState extends State<NavScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Navigate to the tweet composition page
-                                Get.to(GroupCallScreen());
-                              },
-                              child: const Text('Group call'),
-                            ),
-                          ),
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Navigate to the tweet composition page
-                                Get.to(CountSteps());
-                              },
-                              child: const Text('Count'),
-                            ),
-                          ),
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Navigate to the tweet composition page
-                                Get.to((FeedPage()));
-                              },
-                              child: const Text('Feeds'),
-                            ),
-                          ),
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to((FitnessProgressChart()));
-                              },
-                              child: const Text('Charts'),
-                            ),
-                          ),
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Navigate to the tweet composition page
-                                showModal(context);
-                              },
-                              child: const Text('Ratings'),
-                            ),
-                          ),
                           const FindYourWorkout(),
-                          GestureDetector(
-                            onTap: (() {
-                              controller.showFilterDialog(context);
-                            }),
-                            child: const Icon(
-                              Icons.filter_alt_outlined,
-                              color: Colors.white,
-                              size: 26,
-                            ),
-                          )
                         ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    SizedBox(
-                      height: 45,
-                      child: DelayedDisplay(
-                        delay: Duration(milliseconds: delay + 300),
-                        child: const HomePageSearchBar(),
                       ),
                     ),
                     const SizedBox(
@@ -254,6 +188,16 @@ class _NavScreenState extends State<NavScreen> {
                             ),
                           ],
                         ),
+                      ),
+                    ),
+                    DelayedDisplay(
+                      delay: Duration(microseconds: 100),
+                      child: CustomButton(
+                        onPressed: () {
+                          Get.to(FoodSearchScreen());
+                        },
+                        text: capitalize("Track your Nutrition"),
+                        isOutlined: false,
                       ),
                     ),
                   ],

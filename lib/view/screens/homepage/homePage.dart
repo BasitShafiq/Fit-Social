@@ -7,6 +7,7 @@ import 'package:fitsocial/view/screens/feed/homeFeeds.dart';
 import 'package:fitsocial/view/screens/feed/latest_chat.dart';
 import 'package:fitsocial/view/screens/feed/search.dart';
 import 'package:fitsocial/view/screens/homepage/nav_screen.dart';
+import 'package:fitsocial/view/screens/nutrition%20log/nutrition_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../controller/functionsController.dart';
@@ -33,8 +34,8 @@ class _HomePageState extends State<HomePage> {
   List<IconData> iconList = [
     Icons.home,
     Icons.search,
-    Icons.people,
-    Icons.chat
+    Icons.event,
+    Icons.sports_gymnastics,
   ];
   @override
   Widget build(BuildContext context) {
@@ -59,14 +60,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: IndexedStack(
         index: _bottomNavIndex,
-        children: [
-          FeedPage(),
-          SearchScreen(),
-          EventFeedPage(),
-          LatestChatsPage(
-            userId: FirebaseAuth.instance.currentUser!.uid,
-          ),
-        ],
+        children: [FeedPage(), SearchScreen(), EventFeedPage(), NavScreen()],
       ),
     );
   }

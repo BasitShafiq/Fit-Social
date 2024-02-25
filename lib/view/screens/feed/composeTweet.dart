@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitsocial/controller/functionsController/dialogsAndLoadingController.dart';
+import 'package:fitsocial/view/screens/live%20workouts/group_calling.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -194,6 +195,23 @@ class ComposeBottomIconWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(13), color: Colors.white),
               child: const Center(
                 child: Icon(Icons.camera_alt),
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 15,
+          ),
+          InkWell(
+            onTap: () {
+              Get.to(GroupCallScreen());
+            },
+            child: Container(
+              height: 70,
+              width: 70,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(13), color: Colors.white),
+              child: const Center(
+                child: Icon(Icons.live_tv),
               ),
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:fitsocial/config/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
@@ -12,6 +13,26 @@ class GroupCallScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          ),
+        ],
+        elevation: 0,
+        toolbarHeight: 80,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        backgroundColor: AppColors.darkBlue,
+        title: Text(
+          'Join Group Call',
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+      backgroundColor: Color(0xff131429),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Center(

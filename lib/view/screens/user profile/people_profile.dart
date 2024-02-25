@@ -1,6 +1,7 @@
 import 'package:delayed_display/delayed_display.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitsocial/view/screens/feed/chats.dart';
+import 'package:fitsocial/view/widgets/reviews_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fitsocial/config/Colors.dart';
@@ -228,6 +229,15 @@ class PeopleProfile extends StatelessWidget {
             ),
             const Spacer(
               flex: 2,
+            ),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navigate to the tweet composition page
+                  showModal(context);
+                },
+                child: const Text('Leave a review'),
+              ),
             ),
             const SizedBox(
               height: 30,
