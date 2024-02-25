@@ -1,33 +1,31 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitsocial/controller/functionsController/dialogsAndLoadingController.dart';
-import 'package:fitsocial/controller/userController/userController.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class EventScreen extends StatefulWidget {
-  const EventScreen({super.key});
+class CertificatePage extends StatefulWidget {
+  const CertificatePage({super.key});
 
   @override
-  _EventScreenState createState() => _EventScreenState();
+  _CertificatePageState createState() => _CertificatePageState();
 }
 
-class _EventScreenState extends State<EventScreen> {
+class _CertificatePageState extends State<CertificatePage> {
   late File _image;
   late TextEditingController _textEditingController;
-  final UserInformationController userInformationController =
-      Get.put(UserInformationController());
+  late TextEditingController _textEditingController2;
 
   @override
   void initState() {
     super.initState();
     _image = File('');
     _textEditingController = TextEditingController();
+    _textEditingController2 = TextEditingController();
   }
 
   void _onImageIconSelected(File file) {
@@ -50,6 +48,7 @@ class _EventScreenState extends State<EventScreen> {
 
     String userId = user!.uid;
     String message = _textEditingController.text;
+    String timeSlot = _textEditingController2.text;
 
     String? imageUrl;
     if (_image.path.isNotEmpty) {
@@ -64,12 +63,12 @@ class _EventScreenState extends State<EventScreen> {
       });
     }
 
-    await FirebaseFirestore.instance.collection('events').add({
+    await FirebaseFirestore.instance.collection('certificates').add({
       'userId': userId,
       'message': message,
+      'timeSlot': timeSlot,
       'imageUrl': imageUrl,
       'timestamp': Timestamp.now(),
-      'endingTime': '${_selectedTime.hour}:${_selectedTime.minute}'
     });
     Get.back();
     Get.back();
@@ -78,20 +77,6 @@ class _EventScreenState extends State<EventScreen> {
     setState(() {
       _image = File('');
     });
-  }
-
-  TimeOfDay _selectedTime = TimeOfDay.now();
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime,
-    );
-    if (picked != null && picked != _selectedTime) {
-      setState(() {
-        _selectedTime = picked;
-      });
-    }
   }
 
   @override
@@ -104,7 +89,7 @@ class _EventScreenState extends State<EventScreen> {
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
         title: const Text(
-          'Create Your Event',
+          'Create Your Post',
           style: TextStyle(color: Colors.white),
         ),
         actions: [
@@ -128,10 +113,29 @@ class _EventScreenState extends State<EventScreen> {
                     controller: _textEditingController,
                     autofocus: true,
                     decoration: const InputDecoration(
-                      hintText: 'Compose your message...',
+                      hintText: 'Write your Specialities...',
                       border: OutlineInputBorder(),
                     ),
                     maxLines: 7,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Container(
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                  child: TextField(
+                    controller: _textEditingController2,
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                      hintText: 'Free Time Slots..',
+                      border: OutlineInputBorder(),
+                    ),
+                    maxLines: 2,
                   ),
                 ),
               ),
@@ -146,30 +150,10 @@ class _EventScreenState extends State<EventScreen> {
                     ),
                   )
                 : Container(),
-            Row(
-              children: [
-                Flexible(
-                  child: ComposeBottomIconWidget(
-                    textEditingController: _textEditingController,
-                    onImageIconSelected: _onImageIconSelected,
-                  ),
-                ),
-                Flexible(
-                  child: InkWell(
-                    onTap: () => _selectTime(context),
-                    child: Container(
-                      height: 50,
-                      width: 130,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(13),
-                          color: Colors.white),
-                      child: Center(
-                        child: Text(_selectedTime.toString()),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            ComposeBottomIconWidget(
+              textEditingController: _textEditingController,
+              textEditingController2: _textEditingController2,
+              onImageIconSelected: _onImageIconSelected,
             ),
           ],
         ),
@@ -180,11 +164,14 @@ class _EventScreenState extends State<EventScreen> {
 
 class ComposeBottomIconWidget extends StatelessWidget {
   final TextEditingController textEditingController;
+  final TextEditingController textEditingController2;
+
   final Function(File) onImageIconSelected;
 
   const ComposeBottomIconWidget({
     Key? key,
     required this.textEditingController,
+    required this.textEditingController2,
     required this.onImageIconSelected,
   }) : super(key: key);
 

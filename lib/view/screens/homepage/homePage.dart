@@ -1,8 +1,7 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:delayed_display/delayed_display.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitsocial/view/screens/feed/chats.dart';
 import 'package:fitsocial/view/screens/feed/composeTweet.dart';
+import 'package:fitsocial/view/screens/feed/event_feed.dart';
 import 'package:fitsocial/view/screens/feed/groups.dart';
 import 'package:fitsocial/view/screens/feed/homeFeeds.dart';
 import 'package:fitsocial/view/screens/feed/latest_chat.dart';
@@ -10,24 +9,9 @@ import 'package:fitsocial/view/screens/feed/search.dart';
 import 'package:fitsocial/view/screens/homepage/nav_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:fitsocial/config/Colors.dart';
-import 'package:fitsocial/config/text.dart';
-import 'package:fitsocial/config/workouts%20lists/workouts%20Lists.dart';
-import 'package:fitsocial/view/screens/user%20profile/userProfil.dart';
 import '../../../controller/functionsController.dart';
 import '../../../controller/tabs controllers/workOutTabController.dart';
-import '../../../controller/userController/userController.dart';
 import '../../../config/images sources.dart';
-import '../../../helpers/string_methods.dart';
-import '../../widgets/general_widgets/screen_background_image.dart';
-import '../../widgets/reviews_widgets.dart';
-import '../live workouts/group_calling.dart';
-import 'componenets/HomePageSearchBar.dart';
-import 'componenets/ItemsSwitchTiles.dart';
-import 'componenets/find_your_workout.dart';
-import 'componenets/playButton.dart';
-import 'componenets/tabBarViewSections.dart';
-import 'componenets/usernameAndProfile.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -76,9 +60,9 @@ class _HomePageState extends State<HomePage> {
       body: IndexedStack(
         index: _bottomNavIndex,
         children: [
-          NavScreen(),
+          FeedPage(),
           SearchScreen(),
-          GroupScreens(),
+          EventFeedPage(),
           LatestChatsPage(
             userId: FirebaseAuth.instance.currentUser!.uid,
           ),

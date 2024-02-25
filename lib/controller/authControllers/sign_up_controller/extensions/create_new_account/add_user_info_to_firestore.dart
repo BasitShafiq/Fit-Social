@@ -21,6 +21,8 @@ extension AddExtraInfoExt on SignUpController {
       "profileImgPath": profileImgPath,
       "uid": credential.user!.uid,
       "verified": isEmailVerified,
+      "followers": 0,
+      "following": 0,
       "createdAt": thisMomentTime,
     });
   }

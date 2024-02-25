@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delayed_display/delayed_display.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitsocial/view/screens/user%20profile/certificate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
@@ -8,7 +11,6 @@ import 'package:fitsocial/config/text.dart';
 import 'package:fitsocial/view/widgets/general_widgets/button.dart';
 import '../../../controller/authControllers/signOutController.dart';
 import '../../../controller/userController/userController.dart';
-import '../../../config/UserProfile/userProfil.dart';
 import '../../../helpers/string_methods.dart';
 import 'components/appBar.dart';
 import 'components/stat.dart';
@@ -27,6 +29,44 @@ class _UserProfileState extends State<UserProfile> {
   final SignOutController signOutController = Get.put(SignOutController());
   Color? scfldColor = AppColors.darkBlue;
   Color? overlayedColor = const Color.fromARGB(255, 22, 23, 43);
+  Future<Map<String, dynamic>> getUserData(String userId) async {
+    try {
+      // Get the document snapshot corresponding to the user ID
+      final DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('aboutUsers') // Replace 'users' with your collection name
+          .doc(userId)
+          .get();
+
+      // Check if the document exists
+      if (userSnapshot.exists) {
+        // Extract user data from the snapshot
+        final userData = userSnapshot.data() as Map<String, dynamic>;
+        print(userData);
+        return userData;
+      } else {
+        // Document does not exist
+        print('User document does not exist');
+        return {}; // Return an empty map
+      }
+    } catch (error) {
+      // Handle errors
+      print('Error fetching user data: $error');
+      return {}; // Return an empty map
+    }
+  }
+
+  Map<String, dynamic> data = {};
+
+  void setdata() async {
+    data = await getUserData(FirebaseAuth.instance.currentUser!.uid);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setdata();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,19 +144,35 @@ class _UserProfileState extends State<UserProfile> {
                   height: 20,
                 ),
                 DelayedDisplay(
-                  delay: Duration(milliseconds: delay + 300),
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Text(
-                      "this take the place of description, it's not implemented yet like the row below, it's desactivated for now",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white.withOpacity(.8),
-                      ),
-                    ),
-                  ),
-                ),
+                    delay: Duration(milliseconds: delay + 400),
+                    child: Obx(() {
+                      final followers = Get.find<UserInformationController>()
+                          .followers
+                          .value
+                          .length;
+
+                      final following = Get.find<UserInformationController>()
+                          .following
+                          .value
+                          .length;
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Stat(
+                            statValue: capitalize("Followers"),
+                            statTitle: capitalize(
+                              followers.toString(),
+                            ),
+                          ),
+                          Stat(
+                            statValue: capitalize("Following"),
+                            statTitle: capitalize(
+                              following.toString(),
+                            ),
+                          ),
+                        ],
+                      );
+                    })),
                 const SizedBox(
                   height: 40,
                 ),
@@ -179,7 +235,6 @@ class _UserProfileState extends State<UserProfile> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      const SizedBox(height: 5),
                       if (activities.isEmpty)
                         const Center(
                           child: Text(
@@ -210,28 +265,29 @@ class _UserProfileState extends State<UserProfile> {
                   );
                 }),
 
-                // DelayedDisplay(
-                //   delay: Duration(milliseconds: delay + 400),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //     children: [
-                //       ...List.generate(
-                //         UserProfileStats.stats.length,
-                //         (i) => Stat(
-                //           statValue:
-                //               capitalize(UserProfileStats.stats[i]["value"]),
-                //           statTitle: capitalize(
-                //             UserProfileStats.stats[i]["title"],
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
+                Container(
+                  height: 10,
+                ),
               ],
             ),
             const Spacer(
               flex: 2,
+            ),
+            if (data['type'] == "1")
+              DelayedDisplay(
+                delay: Duration(milliseconds: delay + 500),
+                child: CustomButton(
+                    text: capitalize(AppTexts.configureSettings),
+                    isOutlined: true,
+                    onPressed: () {
+                      Get.to(() => const CertificatePage(), arguments: [
+                        scfldColor,
+                        overlayedColor,
+                      ]);
+                    }),
+              ),
+            const SizedBox(
+              height: 10,
             ),
             DelayedDisplay(
               delay: Duration(milliseconds: delay + 500),
