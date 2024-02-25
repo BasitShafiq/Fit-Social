@@ -45,12 +45,16 @@ class UserInformationController extends GetxController {
   // Activities related to fitness
   late RxList<String> fitnessActivities;
 
+  late RxList followers = <String>[].obs;
+  late RxList following = <String>[].obs;
   @override
   void onInit() {
     setUsername();
     setProfileImgPath();
     fetchGoalAndHandleError();
     fetchFitnessActivities();
+    fetchFollowers();
+    fetchFollowing();
     super.onInit();
   }
 
@@ -64,6 +68,84 @@ class UserInformationController extends GetxController {
         .then(
           (value) => value["username"],
         );
+  }
+
+  Future<void> fetchFollowers() async {
+    try {
+      List<String> follos = await getfollowers();
+      followers = follos.obs;
+    } catch (e) {
+      print("Error fetching fitness activities: $e");
+      fitnessActivities = <String>[].obs;
+    }
+  }
+
+  Future<void> fetchFollowing() async {
+    try {
+      List<String> follos = await getfollowing();
+      following = follos.obs;
+    } catch (e) {
+      print("Error fetching fitness activities: $e");
+      fitnessActivities = <String>[].obs;
+    }
+  }
+
+  Future<List<String>> getfollowers() async {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection("aboutUsers")
+          .doc(_auth.currentUser!.uid)
+          .get();
+
+      // Check if the document exists and contains the 'fitnessActivities' field
+      if (snapshot.exists && snapshot.data() != null) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        if (data.containsKey('followers')) {
+          List<dynamic>? activities = data['followers'];
+          if (activities != null) {
+            return activities.map((activity) => activity.toString()).toList();
+          } else {
+            // If 'fitnessActivities' field exists but is null, return an empty list
+            return [];
+          }
+        }
+      }
+      // If the document or 'fitnessActivities' field doesn't exist, return an empty list
+      return [];
+    } catch (e) {
+      print("Error fetching fitness activities: $e");
+      // Handle error as needed
+      return []; // Return empty list in case of error
+    }
+  }
+
+  Future<List<String>> getfollowing() async {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection("aboutUsers")
+          .doc(_auth.currentUser!.uid)
+          .get();
+
+      // Check if the document exists and contains the 'fitnessActivities' field
+      if (snapshot.exists && snapshot.data() != null) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        if (data.containsKey('following')) {
+          List<dynamic>? activities = data['following'];
+          if (activities != null) {
+            return activities.map((activity) => activity.toString()).toList();
+          } else {
+            // If 'fitnessActivities' field exists but is null, return an empty list
+            return [];
+          }
+        }
+      }
+      // If the document or 'fitnessActivities' field doesn't exist, return an empty list
+      return [];
+    } catch (e) {
+      print("Error fetching fitness activities: $e");
+      // Handle error as needed
+      return []; // Return empty list in case of error
+    }
   }
 
   // Set profile image path from Firestore

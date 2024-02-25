@@ -103,62 +103,6 @@ class _NavScreenState extends State<NavScreen> {
                     const SizedBox(
                       height: 55,
                     ),
-                    DelayedDisplay(
-                      delay: Duration(milliseconds: delay + 100),
-                      child: PlayButton(),
-                    ),
-                    const SizedBox(
-                      height: 55,
-                    ),
-                    DelayedDisplay(
-                      delay: Duration(milliseconds: delay + 200),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Navigate to the tweet composition page
-                                Get.to(GroupCallScreen());
-                              },
-                              child: const Text('Group call'),
-                            ),
-                          ),
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Navigate to the tweet composition page
-                                Get.to((FeedPage()));
-                              },
-                              child: const Text('Feeds'),
-                            ),
-                          ),
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Navigate to the tweet composition page
-                                showModal(context);
-                              },
-                              child: const Text('Ratings'),
-                            ),
-                          ),
-                          const FindYourWorkout(),
-                          GestureDetector(
-                            onTap: (() {
-                              controller.showFilterDialog(context);
-                            }),
-                            child: const Icon(
-                              Icons.filter_alt_outlined,
-                              color: Colors.white,
-                              size: 26,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
                     SizedBox(
                       height: 45,
                       child: DelayedDisplay(

@@ -8,7 +8,6 @@ import 'package:fitsocial/config/text.dart';
 import 'package:fitsocial/view/widgets/general_widgets/button.dart';
 import '../../../controller/authControllers/signOutController.dart';
 import '../../../controller/userController/userController.dart';
-import '../../../config/UserProfile/userProfil.dart';
 import '../../../helpers/string_methods.dart';
 import 'components/appBar.dart';
 import 'components/stat.dart';
@@ -104,19 +103,35 @@ class _UserProfileState extends State<UserProfile> {
                   height: 20,
                 ),
                 DelayedDisplay(
-                  delay: Duration(milliseconds: delay + 300),
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Text(
-                      "this take the place of description, it's not implemented yet like the row below, it's desactivated for now",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white.withOpacity(.8),
-                      ),
-                    ),
-                  ),
-                ),
+                    delay: Duration(milliseconds: delay + 400),
+                    child: Obx(() {
+                      final followers = Get.find<UserInformationController>()
+                          .followers
+                          .value
+                          .length;
+
+                      final following = Get.find<UserInformationController>()
+                          .following
+                          .value
+                          .length;
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Stat(
+                            statValue: capitalize("Followers"),
+                            statTitle: capitalize(
+                              followers.toString(),
+                            ),
+                          ),
+                          Stat(
+                            statValue: capitalize("Following"),
+                            statTitle: capitalize(
+                              following.toString(),
+                            ),
+                          ),
+                        ],
+                      );
+                    })),
                 const SizedBox(
                   height: 40,
                 ),
@@ -179,7 +194,6 @@ class _UserProfileState extends State<UserProfile> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      const SizedBox(height: 5),
                       if (activities.isEmpty)
                         const Center(
                           child: Text(
@@ -210,24 +224,9 @@ class _UserProfileState extends State<UserProfile> {
                   );
                 }),
 
-                // DelayedDisplay(
-                //   delay: Duration(milliseconds: delay + 400),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //     children: [
-                //       ...List.generate(
-                //         UserProfileStats.stats.length,
-                //         (i) => Stat(
-                //           statValue:
-                //               capitalize(UserProfileStats.stats[i]["value"]),
-                //           statTitle: capitalize(
-                //             UserProfileStats.stats[i]["title"],
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
+                Container(
+                  height: 10,
+                ),
               ],
             ),
             const Spacer(

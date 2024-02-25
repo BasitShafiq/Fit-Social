@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:fitsocial/controller/userController/userController.dart';
 import 'package:fitsocial/helpers/string_methods.dart';
+import 'package:fitsocial/view/screens/feed/groups.dart';
 import 'package:fitsocial/view/screens/homepage/componenets/usernameAndProfile.dart';
 import 'package:fitsocial/view/screens/user%20profile/userProfil.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../config/show_delay_mixin.dart';
 
-class FeedPage extends StatelessWidget with DelayHelperMixin {
+class EventFeedPage extends StatelessWidget with DelayHelperMixin {
   final UserInformationController userInformationController =
       Get.put(UserInformationController());
 
@@ -21,18 +22,31 @@ class FeedPage extends StatelessWidget with DelayHelperMixin {
       backgroundColor: const Color(0xff131429),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
-        title: Obx(
-          () => ProfileAndUsername(
-            onProfileImgTap: () {
-              Get.to(() => const UserProfile());
-            },
-            username: capitalize(
-              userInformationController.username.value,
-            ),
-            profileImg: userInformationController.userProfileImg.value,
-          ),
-        ),
         backgroundColor: Colors.transparent,
+        title: const Text(
+          'Create Your Event',
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: [
+          InkWell(
+            onTap: () {
+              Get.to(const EventScreen());
+            },
+            child: Container(
+              margin: const EdgeInsets.all(8),
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(50)),
+              child: const Center(
+                child: Icon(
+                  Icons.add,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -40,7 +54,7 @@ class FeedPage extends StatelessWidget with DelayHelperMixin {
             color: const Color(0xff131429)),
         margin: const EdgeInsets.all(4),
         child: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+          stream: FirebaseFirestore.instance.collection('events').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
