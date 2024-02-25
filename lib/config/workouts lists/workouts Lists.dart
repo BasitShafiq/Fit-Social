@@ -1,6 +1,55 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:http/http.dart' as http;
 
 class WorkoutsList {
 // Class responsible for showing workouts (To-do : turn it into API)
+  Random random = Random();
+  Future<List<Map<String, dynamic>>> fetchWorkouts() async {
+    try {
+      var response = await http.get(
+        Uri.parse('https://work-out-api1.p.rapidapi.com/search?Muscles=biceps'),
+        headers: {
+          'X-RapidAPI-Key':
+              '0a0b5f1998msh051b82421519beap1edbcbjsn4ee6765b5c1c',
+          'X-RapidAPI-Host': 'work-out-api1.p.rapidapi.com',
+        },
+      );
+      if (response.statusCode == 200) {
+        List<Map<String, dynamic>> workouts = [];
+        // Example: Assuming the response body is a list of workouts
+        List<dynamic> data = json.decode(response.body);
+        print(response.body.runtimeType);
+        print(data[0]);
+        data.forEach((workout) {
+          int rating = random.nextInt(5);
+          // Add each workout to the workouts list in the desired format
+          workouts.add({
+            "workOutTitle": workout["WorkOut"],
+            "imagePath": "imgs/welcomePageOverlay.png",
+            "setsNumber": workout["Beginner Sets"],
+            "movesNumber": workout["Intermediate Sets"],
+            "description": workout["Long Explanation"],
+            "intensity": workout["Intensity_Level"],
+            "priceInDollars": "12,00",
+            "hasFreeTrial": "false",
+            "durationInMinutes": "44",
+            "rating": rating.toString(),
+            "reviews": "reviews",
+            "comments": "comments",
+            // Map other properties accordingly
+          });
+        });
+        return workouts;
+      } else {
+        throw Exception('Failed to fetch workouts: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+      throw Exception('Failed to fetch workouts: $error');
+    }
+  }
+
   static List allWorkoutsList = [
     {
       "workOutTitle": "Yoga exercises",

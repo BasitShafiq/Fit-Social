@@ -34,6 +34,7 @@ class WorkOutCard extends StatelessWidget {
           comments: listCollection[index]["comments"] ?? "?",
           priceInDollars: listCollection[index]["priceInDollars"] ?? "?",
           hasFreeTrial: listCollection[index]["hasFreeTrial"] ?? "?",
+          intensity: listCollection[index]["intensity"] ?? "?",
         ));
       },
       child: Container(

@@ -1,7 +1,9 @@
 import 'package:delayed_display/delayed_display.dart';
+import 'package:fitsocial/controller/functionsController/dialogsAndLoadingController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitsocial/controller/functionsController.dart';
 
 import '../../../controller/tabs controllers/detailsTabController.dart';
@@ -18,6 +20,7 @@ class WorkOutDetails extends StatelessWidget {
     Key? key,
     required this.overlayedImg,
     required this.workOutTitle,
+    required this.intensity,
     required this.timeLeftInHour,
     required this.movesNumber,
     required this.durationInMinutes,
@@ -40,6 +43,7 @@ class WorkOutDetails extends StatelessWidget {
       description,
       reviews,
       priceInDollars,
+      intensity,
       hasFreeTrial;
   final DetailsTabController _tabx = Get.put(DetailsTabController());
   final FunctionsController _controller = Get.put(FunctionsController());
@@ -106,7 +110,7 @@ class WorkOutDetails extends StatelessWidget {
                               size: 16,
                             ),
                             Text(
-                              "$timeLeftInHour ${AppTexts.hours}",
+                              "$intensity",
                               style: const TextStyle(color: Colors.white),
                             ),
                           ],
@@ -134,56 +138,26 @@ class WorkOutDetails extends StatelessWidget {
                           width: .5,
                         ),
                       ),
-                      child: Row(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           RichText(
                             text: TextSpan(
-                                text: movesNumber,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: " ${AppTexts.moves}",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ]),
+                              text: movesNumber,
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
                           ),
                           RichText(
                             text: TextSpan(
-                                text: setsNumber,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: " ${AppTexts.sets}",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ]),
-                          ),
-                          RichText(
-                            text: TextSpan(
-                                text: durationInMinutes,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: " ${AppTexts.minutes}",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ]),
+                              text: setsNumber,
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -273,24 +247,15 @@ class WorkOutDetails extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    DelayedDisplay(
-                      delay: Duration(milliseconds: delay + 700),
-                      child: CustomButton(
-                        onPressed: () {},
-                        isRounded: false,
-                        text: capitalize("\$ $priceInDollars"),
-                        isOutlined: false,
-                      ),
-                    ),
                     const SizedBox(height: 10),
                     DelayedDisplay(
                       delay: Duration(milliseconds: delay + 800),
                       child: CustomButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          _addToSchedule();
+                        },
                         isRounded: false,
-                        text: hasFreeTrial.toLowerCase() == "true"
-                            ? capitalize(AppTexts.freeTrial)
-                            : capitalize(AppTexts.noFreeTrialAvailable),
+                        text: "Add to Schedule",
                         isOutlined: true,
                       ),
                     ),
@@ -303,4 +268,43 @@ class WorkOutDetails extends StatelessWidget {
       ],
     ));
   }
+
+  void _addToSchedule() async {
+    DialogsAndLoadingController dialogsAndLoadingController =
+        Get.put(DialogsAndLoadingController());
+    dialogsAndLoadingController.showLoading();
+    User? user = FirebaseAuth.instance.currentUser;
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    if (user != null) {
+      Map<String, dynamic> workoutData = {
+        "workOutTitle": workOutTitle,
+        "overlayedImg": overlayedImg,
+        "intensity": intensity,
+        "timeLeftInHour": timeLeftInHour,
+        "movesNumber": movesNumber,
+        "durationInMinutes": durationInMinutes,
+        "setsNumber": setsNumber,
+        "rating": rating,
+        "description": description,
+        "reviews": reviews,
+        "priceInDollars": priceInDollars,
+        "hasFreeTrial": hasFreeTrial,
+        "comments": comments,
+        "userId": userId,
+      };
+
+      try {
+        CollectionReference workoutsCollection =
+            FirebaseFirestore.instance.collection('workouts');
+        await workoutsCollection.add(workoutData);
+      } catch (e) {
+        print('Error adding workout to schedule: $e');
+      }
+    } else {}
+  }
 }
+
+// Import necessary packages
+
+
+// Inside your onPressed callback for the "Add to Schedule" button

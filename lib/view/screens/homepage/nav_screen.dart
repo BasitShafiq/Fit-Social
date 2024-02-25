@@ -1,5 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:delayed_display/delayed_display.dart';
+import 'package:fitsocial/steps_count.dart';
 import 'package:fitsocial/view/screens/feed/chats.dart';
 import 'package:fitsocial/view/screens/feed/composeTweet.dart';
 import 'package:fitsocial/view/screens/feed/groups.dart';
@@ -12,6 +13,7 @@ import 'package:fitsocial/config/Colors.dart';
 import 'package:fitsocial/config/text.dart';
 import 'package:fitsocial/config/workouts%20lists/workouts%20Lists.dart';
 import 'package:fitsocial/view/screens/user%20profile/userProfil.dart';
+import '../../../charts_screen.dart';
 import '../../../controller/functionsController.dart';
 import '../../../controller/tabs controllers/workOutTabController.dart';
 import '../../../controller/userController/userController.dart';
@@ -128,9 +130,26 @@ class _NavScreenState extends State<NavScreen> {
                             child: ElevatedButton(
                               onPressed: () {
                                 // Navigate to the tweet composition page
+                                Get.to(CountSteps());
+                              },
+                              child: const Text('Count'),
+                            ),
+                          ),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Navigate to the tweet composition page
                                 Get.to((FeedPage()));
                               },
                               child: const Text('Feeds'),
+                            ),
+                          ),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Get.to((FitnessProgressChart()));
+                              },
+                              child: const Text('Charts'),
                             ),
                           ),
                           Center(

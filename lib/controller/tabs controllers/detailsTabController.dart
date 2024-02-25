@@ -9,13 +9,10 @@ class DetailsTabController extends GetxController
   // Tabs to show
   final List<Tab> detailsTabs = <Tab>[
     const Tab(text: "Description"),
-    const Tab(text: "Reviews"),
-    const Tab(text: 'Comments'),
   ];
 
   @override
   void onInit() {
-    
     // init on init hah
     detailsTabController =
         TabController(vsync: this, length: detailsTabs.length);

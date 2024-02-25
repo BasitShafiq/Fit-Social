@@ -26,6 +26,7 @@ class MainWorkoutCard extends StatelessWidget {
     required this.description,
     required this.timeLeft,
     required this.isFavortite,
+    required this.intensity,
   }) : super(key: key);
   IconData togglablesIcon;
   String? imagePath,
@@ -36,6 +37,7 @@ class MainWorkoutCard extends StatelessWidget {
       description,
       hasFreeTrial,
       priceInDollars,
+      intensity,
       comments,
       reviews,
       durationInMinutes,
@@ -90,6 +92,7 @@ class MainWorkoutCard extends StatelessWidget {
                   rating: filledStars ?? "?",
                   description: description ?? "?",
                   reviews: reviews ?? "?",
+                  intensity: intensity ?? "?",
                   comments: comments ?? "?",
                   priceInDollars: priceInDollars ?? "?",
                   hasFreeTrial: hasFreeTrial ?? "?",

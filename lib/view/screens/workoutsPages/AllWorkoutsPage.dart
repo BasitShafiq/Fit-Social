@@ -11,12 +11,51 @@ import '../../../helpers/string_methods.dart';
 import '../homepage/componenets/tabBarViewSections.dart';
 import '../user profile/userProfil.dart';
 import 'components/mainWorkoutCard.dart';
+import 'package:http/http.dart' as http;
 
-class AllWorkoutsPage extends StatelessWidget {
+class AllWorkoutsPage extends StatefulWidget {
   AllWorkoutsPage({Key? key, this.dataList}) : super(key: key);
   List? dataList;
+
+  @override
+  State<AllWorkoutsPage> createState() => _AllWorkoutsPageState();
+}
+
+class _AllWorkoutsPageState extends State<AllWorkoutsPage> {
   final FunctionsController controller = Get.put(FunctionsController());
+
   final userInformationController = Get.put(UserInformationController());
+
+  @override
+  void initState() {
+    super.initState();
+    fetchWorkouts();
+  }
+
+  Future<void> fetchWorkouts() async {
+    try {
+      var response = await http.get(
+        Uri.parse('https://work-out-api1.p.rapidapi.com/search?Muscles=biceps'),
+        headers: {
+          'X-RapidAPI-Key':
+              '0a0b5f1998msh051b82421519beap1edbcbjsn4ee6765b5c1c',
+          'X-RapidAPI-Host': 'work-out-api1.p.rapidapi.com',
+        },
+      );
+      if (response.statusCode == 200) {
+        setState(() {
+          print(response.body);
+          // workouts = json.decode(response.body);
+        });
+      } else {
+        throw Exception('Failed to fetch workouts: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+      throw Exception('Failed to fetch workouts: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,58 +137,8 @@ class AllWorkoutsPage extends StatelessWidget {
                     Get.arguments[1], "isWorkoutOfDay", "true")["setsNumber"],
                 reviews: controller.filterWorkoutWith(
                     Get.arguments[1], "isWorkoutOfDay", "true")["reviews"],
-              ),
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            DelayedDisplay(
-              slidingBeginOffset: const Offset(0.0, 0.1),
-              delay: Duration(milliseconds: delay + 100),
-              child: TabBarViewSection(
-                itemsToShow: WorkoutsList.allWorkoutsList.length,
-                title: capitalize(
-                  AppTexts.withDiscounts,
-                ),
-                dataList: controller.filteredListwith(
-                    Get.arguments[1], "isDiscounted", "true"),
-                hasSeeAllButton: false,
-              ),
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            DelayedDisplay(
-              slidingBeginOffset: const Offset(0.0, 0.1),
-              delay: Duration(milliseconds: delay + 200),
-              child: MainWorkoutCard(
-                isFavortite: false,
-                sectionTitle: AppTexts.dailyFreeWorkout,
-                description: AppTexts.choosedCarefully,
-                imagePath: controller.filterWorkoutWith(
-                    Get.arguments[1], "dailyFreeWorkout", "true")["imagePath"],
-                cardTitle: controller.filterWorkoutWith(Get.arguments[1],
-                    "dailyFreeWorkout", "true")["workOutTitle"],
-                filledStars: controller.filterWorkoutWith(
-                    Get.arguments[1], "dailyFreeWorkout", "true")["rating"],
-                timeLeft: controller.filterWorkoutWith(Get.arguments[1],
-                    "dailyFreeWorkout", "true")["timeLeftInHour"],
-                comments: controller.filterWorkoutWith(
-                    Get.arguments[1], "dailyFreeWorkout", "true")["comments"],
-                durationInMinutes: controller.filterWorkoutWith(
-                    Get.arguments[1],
-                    "dailyFreeWorkout",
-                    "true")["durationInMinutes"],
-                hasFreeTrial: controller.filterWorkoutWith(Get.arguments[1],
-                    "dailyFreeWorkout", "true")["hasFreeTrial"],
-                movesNumber: controller.filterWorkoutWith(Get.arguments[1],
-                    "dailyFreeWorkout", "true")["movesNumber"],
-                priceInDollars: controller.filterWorkoutWith(Get.arguments[1],
-                    "dailyFreeWorkout", "true")["priceInDollars"],
-                setsNumber: controller.filterWorkoutWith(
-                    Get.arguments[1], "dailyFreeWorkout", "true")["setsNumber"],
-                reviews: controller.filterWorkoutWith(
-                    Get.arguments[1], "dailyFreeWorkout", "true")["reviews"],
+                intensity: controller.filterWorkoutWith(
+                    Get.arguments[1], "isWorkoutOfDay", "true")["intensity"],
               ),
             ),
             const SizedBox(
@@ -158,13 +147,23 @@ class AllWorkoutsPage extends StatelessWidget {
             DelayedDisplay(
               slidingBeginOffset: const Offset(0.0, 0.1),
               delay: Duration(milliseconds: delay + 300),
-              child: TabBarViewSection(
-                itemsToShow: WorkoutsList.allWorkoutsList.length,
-                title: capitalize(
-                  AppTexts.allWorkouts,
-                ),
-                dataList: Get.arguments[1],
-                hasSeeAllButton: false,
+              child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: WorkoutsList().fetchWorkouts(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    final dataList = snapshot.data ?? [];
+                    return TabBarViewSection(
+                      itemsToShow: dataList.length,
+                      title: capitalize(AppTexts.allWorkouts),
+                      dataList: dataList,
+                      hasSeeAllButton: false,
+                    );
+                  }
+                },
               ),
             ),
             const SizedBox(
