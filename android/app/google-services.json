@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "693549686874",
+    "project_id": "socialfit-6450d",
+    "storage_bucket": "socialfit-6450d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:693549686874:android:87660ab4e18303e4783863",
+        "android_client_info": {
+          "package_name": "com.example.fitsocial"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC412vYt4ByWTAQ5sc2gpLvLAgvbEorU-k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
