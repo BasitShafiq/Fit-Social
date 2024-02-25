@@ -20,6 +20,8 @@ class UserProfileOptionsController extends GetxController {
   TextEditingController newUserNameController = TextEditingController();
   TextEditingController newEmailController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
+  TextEditingController goalController = TextEditingController();
+  TextEditingController activityController = TextEditingController();
   late List userProfileOptionsList = [
     {
       "optionTitle": "change username",
@@ -176,6 +178,80 @@ class UserProfileOptionsController extends GetxController {
               ),
             ),
             backgroundColor: Color(0xff131429));
+      }
+    },
+    {
+      "optionTitle": "Set Goal",
+      "optionIcon": Icons.flag,
+      "optionFunction": () {
+        Get.bottomSheet(
+          Container(
+            width: double.infinity,
+            height: 200,
+            margin: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomTextField(
+                  label: capitalize("Enter your goal"),
+                  controller: goalController,
+                  keyboardType: TextInputType.text,
+                ),
+                SizedBox(
+                  height: 50,
+                  child: CustomButton(
+                    text: capitalize("Set Goal"),
+                    isOutlined: false,
+                    onPressed: () {
+                      Get.back();
+                      userInformationController
+                          .setGoal(goalController.text.trim());
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          backgroundColor: Color(0xff131429),
+        );
+      }
+    },
+    {
+      "optionTitle": "Add Activity",
+      "optionIcon": Icons.add_circle,
+      "optionFunction": () {
+        Get.bottomSheet(
+          Container(
+            width: double.infinity,
+            height: 200,
+            margin: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomTextField(
+                  label: capitalize("Enter activity"),
+                  controller: activityController,
+                  keyboardType: TextInputType.text,
+                ),
+                SizedBox(
+                  height: 50,
+                  child: CustomButton(
+                    text: capitalize("Add Activity"),
+                    isOutlined: false,
+                    onPressed: () {
+                      Get.back();
+                      userInformationController
+                          .addFitnessActivity(activityController.text.trim());
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          backgroundColor: Color(0xff131429),
+        );
       }
     },
     {
