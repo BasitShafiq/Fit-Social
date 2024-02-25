@@ -1,6 +1,8 @@
 import 'package:delayed_display/delayed_display.dart';
+import 'package:fitsocial/view/screens/user%20profile/people_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -93,7 +95,30 @@ class _SearchScreenState extends State<SearchScreen> {
                             itemBuilder: (context, index) {
                               final userData =
                                   users[index].data() as Map<String, dynamic>;
+                              final List<dynamic> activitiesDynamic =
+                                  userData['fitnessActivities'] ?? [];
+                              final List<String> fitnessActivities =
+                                  activitiesDynamic
+                                      .map((activity) => activity.toString())
+                                      .toList();
+
                               return ListTile(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PeopleProfile(
+                                        username: userData['username'],
+                                        userProfileImg:
+                                            userData['profileImgPath'],
+                                        goal: userData['goal'] ?? "No Goal Set",
+                                        fitnessActivities:
+                                            fitnessActivities ?? [],
+                                        id: userData['uid'],
+                                      ),
+                                    ),
+                                  );
+                                },
                                 leading: CircleAvatar(
                                   backgroundImage:
                                       NetworkImage(userData['profileImgPath']),

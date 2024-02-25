@@ -24,20 +24,35 @@ class UserInformationController extends GetxController {
   RxString userProfileImg =
       "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile.png".obs;
 
-// profile img path getted from firestore
+  // Profile img path getted from firestore
   String? newGettedPath;
 
-  // firestore instance
+  // Firestore instance
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // firebase auth instance
+  // Firebase auth instance
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // storage instance
+  // Storage instance
   final storage = FirebaseStorage.instance;
 
   // ImgPicker instance
   ImagePicker picker = ImagePicker();
+
+  // User's goal
+  late RxString goal;
+
+  // Activities related to fitness
+  late RxList<String> fitnessActivities;
+
+  @override
+  void onInit() {
+    setUsername();
+    setProfileImgPath();
+    fetchGoalAndHandleError();
+    fetchFitnessActivities();
+    super.onInit();
+  }
 
   // Set username from firestore ( accept string )
   setUsername() async {
@@ -51,16 +66,7 @@ class UserInformationController extends GetxController {
         );
   }
 
-  Future<String> getProfileImgPathFromFirestore() async {
-    return await _firestore
-        .collection("aboutUsers")
-        .doc(_auth.currentUser!.uid)
-        .get()
-        .then(
-          (value) => value["profileImgPath"],
-        ) as String;
-  }
-
+  // Set profile image path from Firestore
   setProfileImgPath() async {
     // Set the getted profile img path from firestore to newGettedPath variable
     newGettedPath = await getProfileImgPathFromFirestore();
@@ -75,6 +81,39 @@ class UserInformationController extends GetxController {
     }
   }
 
+  Future<void> fetchGoalAndHandleError() async {
+    try {
+      String fetchedGoal = await getGoal();
+      goal = fetchedGoal.obs;
+    } catch (e) {
+      print("Error fetching goal: $e");
+      // Set default goal in settings
+      goal = "Set Your Goal in Setting".obs;
+    }
+  }
+
+  // Get profile image path from FirestoreRR
+  Future<String> getProfileImgPathFromFirestore() async {
+    return await _firestore
+        .collection("aboutUsers")
+        .doc(_auth.currentUser!.uid)
+        .get()
+        .then(
+          (value) => value["profileImgPath"],
+        ) as String;
+  }
+
+  Future<String> getGoal() async {
+    return await _firestore
+        .collection("aboutUsers")
+        .doc(_auth.currentUser!.uid)
+        .get()
+        .then(
+          (value) => value["goal"],
+        ) as String;
+  }
+
+  // Get image from camera
   Future<XFile?> getImgFromCamera() async {
     // Get img from camera
     XFile? image = await picker.pickImage(source: ImageSource.camera);
@@ -96,6 +135,7 @@ class UserInformationController extends GetxController {
     return null;
   }
 
+  // Get image from device
   Future<XFile?> getImgFromDevice() async {
     // Get img from device
     XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -103,10 +143,12 @@ class UserInformationController extends GetxController {
     // Check if there is img
     bool isImgPicked = image != null;
 
-    // Check if there is img
+    // return it if there is img
     if (isImgPicked) {
       return image;
     }
+
+    // Show error if there is no img
     dialogsAndLoadingController.showError(
       capitalize(
         "operation canceled",
@@ -115,7 +157,7 @@ class UserInformationController extends GetxController {
     return null;
   }
 
-  // Update profile img path to firestore
+  // Update profile image path to firestore
   updateProfile(XFile? image) async {
     // Check if there is img
     bool isImgPickedFromDeviceOrCamera = image != null;
@@ -125,10 +167,10 @@ class UserInformationController extends GetxController {
         storage.ref("usersProfileImgs/${_auth.currentUser!.uid}");
 
     late String imageDownloadURL;
-    //
+
     if (isImgPickedFromDeviceOrCamera) {
       // set the file with image path
-      File imgFile = File(image.path);
+      File imgFile = File(image!.path);
 
       try {
         // Show loading
@@ -178,7 +220,6 @@ class UserInformationController extends GetxController {
     // Show loading
     dialogsAndLoadingController.showLoading();
 
-    /// checks on String is necessary to avoid weird results
     try {
       // Update username in firestore
       await _firestore
@@ -198,7 +239,7 @@ class UserInformationController extends GetxController {
       dialogsAndLoadingController
           .showSuccess(capitalize("username updates successfully"));
     } on FirebaseException catch (e) {
-      /// Need more checks
+      // Need more checks
       // Show error to user
       dialogsAndLoadingController.showError("${e.message}");
     }
@@ -249,7 +290,7 @@ class UserInformationController extends GetxController {
     }
   }
 
-// Update password with FirebaseAuth and update it in firestore
+  // Update password with FirebaseAuth and update it in firestore
   updatePassword(String newPassword) async {
     // Show loading
     dialogsAndLoadingController.showLoading();
@@ -313,27 +354,92 @@ class UserInformationController extends GetxController {
       // pop loading
       Get.back();
 
-// Same as above updateEmail method
-      if (e.code == 'requires-recent-login') {
-        dialogsAndLoadingController.showConfirmWithActions(
-            "due to safety reasons, you need a recent re-login to your account in order to get permission to change password",
-            capitalize("re-login"), () {
-          _auth.signOut();
-        });
-      }
-      // Other checks
-      else if (e.code == 'weak-password') {
-        dialogsAndLoadingController.showError(capitalize("weak password"));
-      } else {
-        dialogsAndLoadingController.showError(e.toString());
-      }
+      // Same as above updateEmail method
+      // if (e.code == 'requires-recent-login') {
+      //   dialogsAndLoadingController.showConfirmWithActions(
+      //       "We are moving you to Main Page", capitalize("re-login"), () {
+      //     _auth.signOut();
+      //   });
+      // }
+      // // Other checks
+      // else if (e.code == 'weak-password') {
+      //   dialogsAndLoadingController.showError(capitalize("weak password"));
+      // } else {
+      //   dialogsAndLoadingController.showError(e.toString());
+      // }
     }
   }
 
-  @override
-  void onInit() {
-    setUsername();
-    setProfileImgPath();
-    super.onInit();
+  // Set user's goal
+  setGoal(String userGoal) async {
+    goal.value = userGoal;
+    try {
+      // Update firestore collection 'aboutUsers'
+      await FirebaseFirestore.instance
+          .collection("aboutUsers")
+          .doc(_auth.currentUser!.uid)
+          .update({
+        "goal": goal.value,
+      });
+    } catch (e) {
+      print("Error adding activity to Firestore: $e");
+      // Handle error as needed
+    }
+  }
+
+  void addFitnessActivity(String activity) async {
+    fitnessActivities.add(activity);
+
+    try {
+      // Update firestore collection 'aboutUsers'
+      await FirebaseFirestore.instance
+          .collection("aboutUsers")
+          .doc(_auth.currentUser!.uid)
+          .update({
+        "fitnessActivities": FieldValue.arrayUnion([activity]),
+      });
+    } catch (e) {
+      print("Error adding activity to Firestore: $e");
+      // Handle error as needed
+    }
+  }
+
+  Future<void> fetchFitnessActivities() async {
+    try {
+      List<String> fetchedActivities = await getFitnessActivities();
+      fitnessActivities = fetchedActivities.obs;
+    } catch (e) {
+      print("Error fetching fitness activities: $e");
+      fitnessActivities = <String>[].obs;
+    }
+  }
+
+  Future<List<String>> getFitnessActivities() async {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection("aboutUsers")
+          .doc(_auth.currentUser!.uid)
+          .get();
+
+      // Check if the document exists and contains the 'fitnessActivities' field
+      if (snapshot.exists && snapshot.data() != null) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        if (data.containsKey('fitnessActivities')) {
+          List<dynamic>? activities = data['fitnessActivities'];
+          if (activities != null) {
+            return activities.map((activity) => activity.toString()).toList();
+          } else {
+            // If 'fitnessActivities' field exists but is null, return an empty list
+            return [];
+          }
+        }
+      }
+      // If the document or 'fitnessActivities' field doesn't exist, return an empty list
+      return [];
+    } catch (e) {
+      print("Error fetching fitness activities: $e");
+      // Handle error as needed
+      return []; // Return empty list in case of error
+    }
   }
 }

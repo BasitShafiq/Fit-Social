@@ -120,24 +120,114 @@ class _UserProfileState extends State<UserProfile> {
                 const SizedBox(
                   height: 40,
                 ),
-                DelayedDisplay(
-                  delay: Duration(milliseconds: delay + 400),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                // Display user's goal
+                Obx(() {
+                  final userGoal =
+                      Get.find<UserInformationController>().goal.value;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ...List.generate(
-                        UserProfileStats.stats.length,
-                        (i) => Stat(
-                          statValue:
-                              capitalize(UserProfileStats.stats[i]["value"]),
-                          statTitle: capitalize(
-                            UserProfileStats.stats[i]["title"],
-                          ),
+                      const SizedBox(height: 10),
+                      const Center(
+                        child: Text(
+                          'Goal:',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
+                      const SizedBox(height: 5),
+                      if (userGoal == "" || userGoal == " ")
+                        const Center(
+                          child: Text(
+                            'No Goal Set',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      if (userGoal != "" || userGoal != " ")
+                        Center(
+                            child: Chip(
+                          label: Text(
+                            userGoal,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor:
+                              const Color.fromARGB(255, 33, 163, 37),
+                        )),
                     ],
-                  ),
-                ),
+                  );
+                }),
+
+                // Display user's activities
+                Obx(() {
+                  final activities =
+                      Get.find<UserInformationController>().fitnessActivities;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 10),
+                      const Center(
+                        child: Text(
+                          'Activities:',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      if (activities.isEmpty)
+                        const Center(
+                          child: Text(
+                            'No activities added',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      if (activities.isNotEmpty)
+                        Center(
+                          child: Wrap(
+                            spacing: 8,
+                            children: activities.map((activity) {
+                              return Chip(
+                                label: Text(
+                                  activity,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor:
+                                    const Color.fromARGB(255, 33, 163, 37),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+
+                // DelayedDisplay(
+                //   delay: Duration(milliseconds: delay + 400),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //     children: [
+                //       ...List.generate(
+                //         UserProfileStats.stats.length,
+                //         (i) => Stat(
+                //           statValue:
+                //               capitalize(UserProfileStats.stats[i]["value"]),
+                //           statTitle: capitalize(
+                //             UserProfileStats.stats[i]["title"],
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
             const Spacer(

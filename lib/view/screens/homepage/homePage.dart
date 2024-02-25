@@ -1,9 +1,11 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:delayed_display/delayed_display.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitsocial/view/screens/feed/chats.dart';
 import 'package:fitsocial/view/screens/feed/composeTweet.dart';
 import 'package:fitsocial/view/screens/feed/groups.dart';
 import 'package:fitsocial/view/screens/feed/homeFeeds.dart';
+import 'package:fitsocial/view/screens/feed/latest_chat.dart';
 import 'package:fitsocial/view/screens/feed/search.dart';
 import 'package:fitsocial/view/screens/homepage/nav_screen.dart';
 import 'package:flutter/material.dart';
@@ -39,9 +41,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final FunctionsController controller = Get.put(FunctionsController());
-
-  final UserInformationController userInformationController =
-      Get.put(UserInformationController());
 
   final CustomTabBarController _tabx = Get.put(CustomTabBarController());
 
@@ -80,7 +79,9 @@ class _HomePageState extends State<HomePage> {
           NavScreen(),
           SearchScreen(),
           GroupScreens(),
-          ChatScreen(),
+          LatestChatsPage(
+            userId: FirebaseAuth.instance.currentUser!.uid,
+          ),
         ],
       ),
     );
