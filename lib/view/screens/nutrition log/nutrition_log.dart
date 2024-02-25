@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitsocial/controller/functionsController/dialogsAndLoadingController.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -61,6 +64,9 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
   }
 
   Future<void> _fetchFoodDetails(String itemId) async {
+    DialogsAndLoadingController dialogsAndLoadingController =
+        Get.put(DialogsAndLoadingController());
+    dialogsAndLoadingController.showLoading();
     var url =
         'https://trackapi.nutritionix.com/v2/search/item/?nix_item_id=$itemId';
     var headers = {
@@ -88,7 +94,8 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
         _protein = protein.toString();
         _sodium = sodium.toString();
       });
-      await saveFoodDetails(calories, totalFat, carbohydrates, protein, sodium);
+      await saveFoodDetails(calories, totalFat, carbohydrates, protein, sodium)
+          .then((value) => Get.back());
     } else {
       setState(() {
         _calories = 'Error fetching data';
@@ -149,9 +156,16 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(labelText: 'Enter Food'),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: TextField(
+                maxLines: 3,
+                controller: _searchController,
+                decoration: InputDecoration(labelText: 'Enter Food'),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             ElevatedButton(
               onPressed: () {
@@ -160,29 +174,34 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
               child: Text('Add Food'),
             ),
             SizedBox(height: 20),
-            Text(
-              _calories,
-              style: TextStyle(fontSize: 20),
+            Center(
+              child: Text(
+                "Your Food Nutritions",
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
             Text(
-              'Calories: $_calories',
-              style: TextStyle(fontSize: 20),
+              'Calories:        $_calories',
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             Text(
-              'Total Fat: $_totalFat',
-              style: TextStyle(fontSize: 20),
+              'Total Fat:         $_totalFat',
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             Text(
-              'Carbohydrates: $_carbohydrates',
-              style: TextStyle(fontSize: 20),
+              'Carbohydrates:         $_carbohydrates',
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             Text(
-              'Protein: $_protein',
-              style: TextStyle(fontSize: 20),
+              'Protein:         $_protein',
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             Text(
-              'Sodium: $_sodium',
-              style: TextStyle(fontSize: 20),
+              'Sodium:        $_sodium',
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           ],
         ),
