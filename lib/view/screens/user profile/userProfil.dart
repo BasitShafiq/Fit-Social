@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delayed_display/delayed_display.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitsocial/view/screens/user%20profile/certificate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
@@ -26,6 +29,44 @@ class _UserProfileState extends State<UserProfile> {
   final SignOutController signOutController = Get.put(SignOutController());
   Color? scfldColor = AppColors.darkBlue;
   Color? overlayedColor = const Color.fromARGB(255, 22, 23, 43);
+  Future<Map<String, dynamic>> getUserData(String userId) async {
+    try {
+      // Get the document snapshot corresponding to the user ID
+      final DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('aboutUsers') // Replace 'users' with your collection name
+          .doc(userId)
+          .get();
+
+      // Check if the document exists
+      if (userSnapshot.exists) {
+        // Extract user data from the snapshot
+        final userData = userSnapshot.data() as Map<String, dynamic>;
+        print(userData);
+        return userData;
+      } else {
+        // Document does not exist
+        print('User document does not exist');
+        return {}; // Return an empty map
+      }
+    } catch (error) {
+      // Handle errors
+      print('Error fetching user data: $error');
+      return {}; // Return an empty map
+    }
+  }
+
+  Map<String, dynamic> data = {};
+
+  void setdata() async {
+    data = await getUserData(FirebaseAuth.instance.currentUser!.uid);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setdata();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -231,6 +272,22 @@ class _UserProfileState extends State<UserProfile> {
             ),
             const Spacer(
               flex: 2,
+            ),
+            if (data['type'] == "1")
+              DelayedDisplay(
+                delay: Duration(milliseconds: delay + 500),
+                child: CustomButton(
+                    text: capitalize(AppTexts.configureSettings),
+                    isOutlined: true,
+                    onPressed: () {
+                      Get.to(() => const CertificatePage(), arguments: [
+                        scfldColor,
+                        overlayedColor,
+                      ]);
+                    }),
+              ),
+            const SizedBox(
+              height: 10,
             ),
             DelayedDisplay(
               delay: Duration(milliseconds: delay + 500),
